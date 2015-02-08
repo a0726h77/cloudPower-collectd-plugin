@@ -23,7 +23,7 @@ static int cloudpower_config (const char *key, const char *value)
         temp = strdup (value);
         if (temp == NULL)
         {
-            ERROR("tokyotyrant plugin: Host strdup failed.");
+            ERROR("CloudPower plugin: Host strdup failed.");
             return (1);
         }
         sfree (config_host);
@@ -61,6 +61,7 @@ static int cloudpower_read (void)
 
     token = strtok(electric_status, " ");
     electriCurrent = atoi(token) * 0.1;
+
     token = strtok(NULL, " ");
     kwhrTotal = atoi(token) * 0.1;
 
@@ -70,17 +71,16 @@ static int cloudpower_read (void)
 	return (0);
 }
 
-static int cloudpower_shutdown (void) /* {{{ */
+static int cloudpower_shutdown (void)
 {
     sfree (config_host);
 
     return (0);
-} /* }}} int ping_shutdown */
+}
 
 void module_register (void)
 {
 	plugin_register_config ("cloudpower", cloudpower_config, config_keys, config_keys_num);
-    // plugin_register_init ("cloudpower", my_init);
 	plugin_register_read ("cloudpower", cloudpower_read);
     plugin_register_shutdown ("cloudpower", cloudpower_shutdown);
-} /* void module_register */
+}
